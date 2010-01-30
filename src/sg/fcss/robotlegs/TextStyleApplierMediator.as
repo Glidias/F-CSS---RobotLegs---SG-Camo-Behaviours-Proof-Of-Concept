@@ -8,7 +8,6 @@
 	import sg.fcss.interfaces.IStyleRequester;
 	import sg.fcss.events.StyleRequestBubble;
 	import sg.fcss.utils.TextStyleMediatorUtil;
-	import com.gaiaframework.debug.GaiaDebug;
 	/**
 	 * ...
 	 * @author Glenn Ko
