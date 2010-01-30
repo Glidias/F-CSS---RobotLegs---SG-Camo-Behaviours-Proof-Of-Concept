@@ -1,8 +1,10 @@
 This is a rough 'proof of concept Gaia site' that supports auto-formatting of all TextFields to a global F*CSS stylesheet. It also supports auto-injecting interactive/layout behaviours & properties onto any Flash DisplayObject that designers create. RobotLegs helps auto-wires any of these DisplayObject assets that appear on the stage together with a F*CSS stylesheet running under a Gaia Flash Framework site shell. 
 
-Combinining with SG-Camo's behaviours, a swf package behaviour source is preloaded into Gaia to support a precompiled repository of reusable IBehaviour classes that can be remotely applied to any display object. With the F*CSS stylesheet being able to declare the stylings/behaviours/properties of every on-stage instance and textfield, this effectively prevents the need to write manual code to apply such properties or behaviours to these display objects.
+Combinining with SG-Camo's behaviours, a swf package behaviour source is preloaded into Gaia to support a precompiled repository of reusable IBehaviour classes that can be remotely applied to any display object. 
+
+With the F*CSS stylesheet being able to declare the stylings/behaviours/properties of any on-stage instance, it effectively prevents the need to write manual inline code to apply such properties or behaviours to these display objects.
  
-As a result, no application-side code is being used to explicitly reference any item on the Flash stage, only F*CSS/RobotLegs' mediators are automatically created when such items appear, with any assosiated F*CSS sheet's selector  behaviours/property injected as required. 
+As a result, no application-side code is being used to explicitly reference any item on the Flash stage or display list, only F*CSS/RobotLegs' mediators are automatically created when such items appear, with only the assosiated F*CSS sheet's selector  behaviours/properties being injected. 
 
 For more information on RobotLegs, F*CSS, SG-Camo and Gaia Flash Framework, check the following homepages: 
 http://www.robotlegs.org/ ,
@@ -59,7 +61,7 @@ http://github.com/Glidias/F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concep
 ///////////////
 And about stylesheets:
 ///////////////
-The F*CSS stylesheet
+The F*CSS stylesheet (notice the use of sub-selectors)
 http://github.com/Glidias/F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concept/blob/master/bin/css/props.css
 
 A regular native Flash CSS stylesheet
