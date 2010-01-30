@@ -4,16 +4,16 @@
 <flex-config>
   <compiler>
     <source-path append="true">
-      <path-element>C:\SG_Camo_Git\SGCamo_FCSS_RobotLegs_Gaia\src</path-element>
+      <path-element>C:\SG_Camo_Git\F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concept\src</path-element>
       <path-element>C:\Program Files\FlashDevelop3\Library\AS3\classes</path-element>
     </source-path>
     <include-libraries>
-      <library>C:\SG_Camo_Git\SGCamo_FCSS_RobotLegs_Gaia\lib\robotlegs-framework-v1.0.2.swc</library>
-      <library>C:\SG_Camo_Git\SGCamo_FCSS_RobotLegs_Gaia\lib\SwiftSuspenders-v1.0.1.swc</library>
+      <library>C:\SG_Camo_Git\F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concept\lib\robotlegs-framework-v1.0.2.swc</library>
+      <library>C:\SG_Camo_Git\F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concept\lib\SwiftSuspenders-v1.0.1.swc</library>
     </include-libraries>
   </compiler>
   <file-specs>
-    <path-element>C:\SG_Camo_Git\SGCamo_FCSS_RobotLegs_Gaia\src\sg\gaialegs\framework\MainCore.as</path-element>
+    <path-element>C:\SG_Camo_Git\F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concept\src\sg\gaialegs\framework\MainCore.as</path-element>
   </file-specs>
   <default-background-color>#FFFFFF</default-background-color>
   <default-frame-rate>30</default-frame-rate>
