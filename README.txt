@@ -17,7 +17,7 @@ FlashDevelop AS3 project files
 
 SGCamoGaia_FCSS_RobotLegs_Gaia_Main.as3proj  	Can be used to compile Gaia's Main document class with Flex SDK. (main.fla/main.swf). However, main.fla can be compiled with Flash CS3 as well.
 
-SGCamoGaia_FCSS_RobotLegs_CORE.as3proj  	Flex SDK must be available to compile the FCSS/SG-Camo/RobotLegs core. (maincore.fla/maincore.swf) to support the injection meta tags. By default, all RobotLegs/SwiftSuspenders SWCs are included as full libraries so it should work right off the bat.
+SGCamoGaia_FCSS_RobotLegs_CORE.as3proj  	Flex SDK must be available to compile the FCSS/SG-Camo/RobotLegs core. (maincore.swf) to support the injection meta tags. By default, all RobotLegs/SwiftSuspenders SWCs are included as full libraries so it should work right off the bat.
 
 //////////////////////////
 Files to look into:
