@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<site title="The Kilo Test: %PAGE%" menu="true"  indexFirst="true">
+    <page id="index" src="index.swf" title="The Kilo FCSS Test" domain="current" seo="true" >
+	   <!-- Gaia/CGG/RobotLegs startup -->
+	   <asset id="maincore" src="maincore.swf"></asset>
+	   <asset id="cgg_config" src="xml/cgg_config.xml"></asset>
+	   
+	   <!-- TODO: Core dependencies that should be able to run standalone WITHOUT Gaia -->
+	   <asset id="fonts" src="fonts.swf"></asset>
+	   <asset id="props" src="css/props.css" type="text"></asset>
+	   <asset id="stylesheet" src="css/stylesheet.css"></asset>
+	   <asset id="behaviours" src="behaviours.swf" type="behaviours"></asset>
+	   <asset id="gsTransitions" src="gsTransitions.swf" type="definitions" domain="current" classified="true">
+		    <classes>
+				<gs class="sg.camogxml.managers.gs.GSTransition" />
+				<gsList class="sg.camogxml.managers.gs.GSListTransition" />
+			</classes>
+			<methods>
+				<Cubic class="com.greensock.easing.Cubic"></Cubic>
+			</methods>
+	   </asset>
+	 
+		<page id="section1" src="section.swf" title="SectionTest" menu="true">
+			
+		</page>
+		<page id="section2" src="section.swf" title="SectisonTest" menu="true">
+			
+		</page>
+    </page>
+</site>

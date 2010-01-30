@@ -1,0 +1,33 @@
+﻿.hiltonFont {
+	font-family:HiltonFont;
+}
+.tnc {
+	font-family:HiltonFontRegular;
+}
+a {
+	color:#FFA200;
+}
+a:hover {
+	color:#FFCB53;
+}
+.hiltonFontHotel {
+	font-family:HiltonFont;
+	font-size:13;
+}
+.arialSymbols {
+	font-family:ArialSymbols;
+}
+.hiltonFontRegular {
+	font-family:HiltonFontRegular;
+}
+.triviaTitle {
+	font-family:HiltonFont;
+	color:#FFA200;
+	font-style:bold;
+	font-size:22;
+}
+.triviaBody {
+	font-family:HiltonFont;
+	color:#282C2D;
+	font-size:14;
+}	

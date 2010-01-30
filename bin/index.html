@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>TSG Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="language" content="en" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<script src="js/swfaddress.js" type="text/javascript"></script>
+	<script src="js/swfobject.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		var flashvars = {
+		siteXML: "xml/site.xml"
+	};
+		var params = {
+			menu: "false",
+			scale: "noScale",
+			allowFullscreen: "true",
+			allowScriptAccess: "always",
+			bgcolor: "#FFFFFF"
+		};
+		var attributes = {
+			id:"TSGTest"
+		};
+		swfobject.embedSWF("main.swf", "altContent", "100%", "100%", "9.0.0", "expressInstall.swf", flashvars, params, attributes);
+	</script>
+	<style>
+		html, body { height:100%; }
+		body { margin:0; }
+	</style>
+</head>
+<body>
+	<div id="altContent">
+		<h1>TSG Test</h1>
+		<p>Alternative content</p>
+		<div id="copy">
+			<div id="timeline" transition="{[gs]}"  fromVars="alpha:0,*y:35" durationIn="1.8"></div>
+			<div id="timelineMarker" transition="{[gs]}|.4" fromVars="alpha:0"></div>
+			<div id="timeListDisplay" transition="{[gsList]}|.5|0" inVars="alpha:0" forEachFromVars="alpha:0,*y:-12" forEachEase="{[Cubic.easeInOut]}" forEachDuration=".4" stagger="-.25" outVars="alpha:0" >	
+			</div>
+			<ul id="UIPage">
+				<li id="section1"><a href="index/section1">Help</a></li>
+				<li id="section2"><a href="index/section2">About TSG</a></li>
+				<li id="section3"><a href="index/section3">The TSG Directors</a></li>
+				<li id="wardrobe">Wardrobe</li>
+				<li id="motionworks">Motion Picture Portfolio</li>
+				<li id="props">Props</li>
+			</ul>
+		</div>
+
+		
+		<p><a href="http://www.adobe.com/go/getflashplayer"><img 
+			src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" 
+			alt="Get Adobe Flash player" /></a></p>
+	</div>
+</body>
+</html>

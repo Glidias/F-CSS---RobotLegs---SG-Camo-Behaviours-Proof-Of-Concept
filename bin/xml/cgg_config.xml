@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Root pre-wired configuration defining the conventions for the CGG framework to
+	reduce boiler plate code on the app core.
+	You shouldn't need to change much of this except for adding a few stuff if you need to,
+	or if you're extending the framework or using a bit of CGG DI's utilties for your own 
+	application (such as NodeClassSpawnerManager, DependencyResolverUtil, etc.), by adding your
+	own mappings.
+-->
+	
+<Configuration>
+	<!-- Resource stack classes (which are being instnatiated at the beginning ).
+	(todo: defered instantiation only when stack is requested, so configuration settings
+	will not affect initial application state.) -->
+	<stacks> 
+		<!--
+		<stack class="sg.camogxml.managers.GPropertySheetManager" id="stylesheet" alwaysStack="false" />
+		<stack class="sg.camogxml.managers.DefinitionsManager" id="definition" alwaysStack="true" />
+		<stack class="sg.camogxml.managers.BehaviourManager" id="behaviour" alwaysStack="true" />
+		-->
+		<stack class="sg.camogxml.managers.DefinitionsManager" id="definition" alwaysStack="true"></stack>
+		<stack class="sg.camogxml.managers.DisplayRenderManager" id="render" alwaysStack="true" />
+		
+	</stacks>
+	
+	<dummySources>
+		<!--
+		<source id="definition" type="sg.camo.interfaces::IDefinitionGetter"></source>
+		<source id="stylesheet" type="sg.camo.interfaces::ISelectorSource"></source>
+		<source id="behaviour" type="sg.camo.interfaces::IBehaviouralBase"></source>
+		-->
+		<source id="render" type="sg.camo.interfaces::IDisplayRender"></source>
+	</dummySources>
+	
+	<!-- Node dependency injector config to wire up xml node attributes to properties 
+		of a particular generated class or classes within a subject context -->
+	<NodeClassSpawnerManager class="sg.camogxmlgaia.inject.NodeClassSpawnerManager">
+		<NodeClassMapping>
+			<subject id="gxml">
+				<map attrib="inlineSheetClass" type="constructor" typeParam="Class" compulsory="true">camo.core.property.PropertySheet</map>
+				<map attrib="bindAttribute" type="setter" typeParam="attributeBinding" compulsory="true">{index.resolveBindingString}</map>
+				<map attrib="bindText" type="setter" typeParam="textBinding" compulsory="true">{index.resolveBindingString}</map>
+			</subject>
+		</NodeClassMapping>
+		<NodeClassMapping typeParamPrefix="sg.camo.interfaces::">  
+			<subject id="gxml">
+				<map attrib="stylesheet" type="constructor" typeParam="ISelectorSource" method="{index.determineSource}" >
+					<param>stylesheet</param>
+				</map>
+				<map attrib="behaviours" type="constructor" typeParam="IBehaviouralBase" method="{index.determineSource}">
+					<param>behaviour</param>
+				</map>
+				<map attrib="definitions" type="constructor" typeParam="IDefinitionGetter" method="{index.determineSource}" >
+					<param>definition</param>
+				</map>
+			</subject>
+			<subject id="gxmlPage">
+				<clone id="gxml"></clone>
+				<map attrib="renderSrc" type="constructor" typeParam="IDisplayRenderSource" method="{index.determineSource}" >
+					<param>render</param>
+				</map>
+			</subject>
+			<subject id="seo">
+				<map attrib="renderSrc" type="constructor" typeParam="IDisplayRenderSource" method="{index.determineSource}" >
+					<param>render</param>
+				</map>
+			</subject>
+		</NodeClassMapping>
+		<NodeClassMapping>
+			<subject id="seo">  <!-- sg.camogxml.seo::SEOPageRenderer -->
+				<map attrib="$nodeClassSpawner" type="constructor" typeParam="sg.camogxmlgaia.api::INodeClassSpawner" compulsory="true">{index.nodeClassSpawner}</map>
+				<map attrib="defGetter" type="constructor" typeParam="sg.camo.interfaces::IDefinitionGetter" compulsory="true" method="{index.determineSource}">
+					<param>definition</param>
+				</map>
+				<map attrib="$attributeBinding" type="method" delimiter="," typeParam="addAttributeBinding" compulsory="true">
+					<parameter type="String">transition</parameter>
+					<parameter asString="">{index.currentTransitionManagerMethod}</parameter>
+					<!--
+						<parameter type="sg.camo.interfaces::ITransitionModule"></parameter>
+						<parameter type="Number"></parameter>
+						<parameter type="Number"></parameter>
+					-->
+				</map>
+				<!--
+				<map attrib="nodePopulate" type="method" typeParam="addAttributeBinding" compulsory="false">
+					<parameter type="String">populateNode</parameter>
+					<parameter type="IFunctionDefInvoke" method="{index.getPageInstance}" resolveDependency="populateNode|Function">
+						<parameter type="String">sg.camogxml.utils.NodePopulator</parameter>
+						<parameter type="NodeClassSpawn"><nodePopulate class="sg.camogxml.utils.NodePopulator" /></parameter>
+					</parameter>
+				</map>
+				<map attrib="nodeLive" type="method" typeParam="addAttributeBinding" compulsory="false">
+					<parameter type="String">addLiveNode</parameter>
+					<parameter type="IFunctionDefInvoke" method="{index.getPageInstance}" resolveDependency="addLiveNode|Function">
+						<parameter type="String">sg.camogxmlgaia.utils.GaiaNodePopulator</parameter>
+						<parameter type="NodeClassSpawn"><nodePopulate class="sg.camogxmlgaia.utils.GaiaNodePopulator" /></parameter>
+					</parameter>
+				</map>
+				-->
+			</subject>
+			<subject id="nodePopulate">
+				<map attrib="$chunkConfig" type="constructor" typeParam="XML" method="{index.getAssetFromPath}" resolveDependency="chunkConfig|XML" compulsory="true">
+					<param asString="">{index.curPageRenderPath}/chunkConfig</param>
+				</map>
+			</subject>
+		</NodeClassMapping>
+		<NodeClassMapping>
+			<subject id="sg.camogxml.managers.gs::GSTransition">
+				<map attrib="$target" type="constructor" typeParam="Object" compulsory="true" asString="">{target}</map>  
+				<map attrib="$tweenClass" type="constructor" >com.greensock.TweenLite</map>
+				<map attrib="$gsPluginVars" type="constructor" asString=""></map> <!-- {index.plugInVars}compulsory="true"  -->
+				<map attrib="var" type="setter"></map>
+			</subject>
+			<subject id="sg.camogxml.managers.gs::GSListTransition">
+				<map attrib="forEachEase" type="setter" compulsory="true" asString="">{[Cubic.easeIn]}</map>
+				<clone id="sg.camogxml.managers.gs::GSTransition"></clone>
+				<map attrib="listenAdd" type="constructor" ></map>
+				<map attrib="listenRemove" type="constructor" ></map>
+				<map attrib="timelineClass" type="constructor" ></map>
+			</subject>
+		</NodeClassMapping>
+	</NodeClassSpawnerManager>
+	
+	<!-- Dependency finder to find specific class signatures within a subject context 
+		to resolve to those values -->
+	<DependencyResolverManager>
+		<FindDependency subject="chunkConfig">
+			<find class="XML">
+				<check property="xml"></check>
+			</find>
+		</FindDependency>
+		<FindDependency subject="populateNode">
+			<find class="Function">
+				<check method="populateNode"></check>
+			</find>
+		</FindDependency>
+		<FindDependency subject="addLiveNode">
+			<find class="Function">
+				<check method="addLiveNode"></check>
+			</find>
+		</FindDependency>
+		<!-- Resource finding conventions when index.determineSource() is called for GXMLAssets. -->
+		<FindDependency subject="gxml">
+			<find class="sg.camo.interfaces::ISelectorSource">
+				<check class="sg.camogxmlgaia.api::ISourceAsset">
+					<check property="source"></check>
+				</check>
+				<check class="com.gaiaframework.api::IPageAsset">
+					<check method="{index.cloneStack}">
+						<param property="branch"></param>
+						<param>stylesheet</param>
+					</check>
+				</check>
+				<check class="sg.camo.interfaces::ISelectorSource"></check>
+			</find>
+			<find class="sg.camo.interfaces::IDefinitionGetter">
+				<check class="sg.camogxmlgaia.api::ISourceAsset">
+					<check property="source"></check>
+				</check>
+				<check class="com.gaiaframework.api::IPageAsset">
+					<check method="{index.cloneStack}">
+						<param property="branch"></param>
+						<param>definition</param>
+					</check>
+				</check>
+				<check class="sg.camo.interfaces::IDefinitionGetter"></check>
+			</find>
+			<find class="sg.camo.interfaces::IDisplayRenderSource">
+				<check class="sg.camogxmlgaia.api::ISourceAsset">
+					<check property="source"></check>
+				</check>
+				<check class="com.gaiaframework.api::IPageAsset">
+						<check method="{index.cloneStack}">
+							<param property="branch"></param>
+							<param>render</param>
+						</check>
+				</check>
+				<check class="sg.camo.interfaces::IDisplayRenderSource"></check>
+			</find>
+			<find class="sg.camo.interfaces::IBehaviouralBase">
+				<check class="sg.camogxmlgaia.api::ISourceAsset">
+					<check property="source"></check>
+				</check>
+				<check class="com.gaiaframework.api::IPageAsset">
+					<check method="{index.cloneStack}">
+						<param property="branch"></param>
+						<param>behaviour</param>
+					</check>
+				</check>
+				<check class="sg.camo.interfaces::IBehaviouralBase"></check>
+			</find>
+		</FindDependency>
+		
+		<!-- Depth finding conventions when index page attempts to reparent/position assets
+		with "depth" attribute path to another asset -->
+		<FindDependency subject="depth">
+			<find class="flash.display::DisplayObject">
+				
+				<check class="sg.camogxmlgaia.api::IDisplayRenderAsset">
+					<check property="displayRender">
+						<check property="rendered"></check> <!-- TO resolve ambuiguitity of which one to choose -->
+						<check method="getRenderedById">
+							<param>{index.assetPathQuery}</param>
+						</check>
+					</check>
+				</check>
+				<check class="com.gaiaframework.api::IDisplayObject">
+					<check property="loader">
+						<check property="content"></check>
+					</check>
+				</check>
+			</find>
+		</FindDependency>
+		
+	</DependencyResolverManager>
+
+		
+	<!-- Render node "renderType" attribute short-hand enumeration and default classes used per context -->
+	<renderClasses>   
+		<!--
+		<gxml> 
+			<default class="sg.camogxml.render.GXMLRender" />
+			<persistant class="sg.camogxml.render.GXMLPersistantRender" />
+			<module class="sg.camogxml.render.GXMLModuleRender" />
+		</gxml>
+		-->
+		<gxmlPage>
+			<default class="sg.camogxml.render.GXMLPageRender" />
+		</gxmlPage>
+		<seoRender>
+			<default class="sg.camogxml.seo.SEOPageRenderer" />
+		</seoRender>
+		<transition>
+			<default class="sg.camogxml.managers.gs.GSTransitionManager"/>
+		</transition>
+	</renderClasses>
+	
+</Configuration>

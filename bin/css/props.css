@@ -1,0 +1,64 @@
+﻿TextField {
+    font:HiltonFont;
+	font-family:HiltonFont;
+	embed-fonts:true;
+}
+
+TextField#coolField {
+	font-size:15;
+	isHtmlText:true;
+	selectable:true;
+}
+
+TextField#testField {
+	font-size: 33;
+	height:120;
+}
+
+
+.MovieClipText>textField {
+	font-size:66;
+	font:HiltonFontRegular;
+	height:100;	
+	selectable:true;
+	margin-left:20;
+	auto-size:left;
+}
+
+/* List displays under GListDisplay base*/
+GListDisplay {
+
+}
+.ListContainer {
+   behaviours:WrapHLayoutBehaviour;  
+}
+
+.ListContainer>WrapHLayoutBehaviour {
+	spacing:20;
+}
+
+.ListContainer#testContainer>WrapHLayoutBehaviour {
+	spacing:5;
+}
+
+/* TextField modules under TextSpr base */
+TextSpr {
+	
+}
+TextSpr>textField {
+	
+}
+
+.AnotherTextModule { 
+	package:sg.kilo.ui;
+}
+
+.AnotherTextModule>textField {
+	width:250;
+	height:50;
+	font:HiltonFontRegular;
+	font-size:25;
+}
+
+
+
