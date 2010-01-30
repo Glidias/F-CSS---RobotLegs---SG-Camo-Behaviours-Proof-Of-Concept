@@ -37,11 +37,13 @@ http://github.com/Glidias/F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concep
 
 ///////////////////
 sg.fcss
-//////////////////
+///////////////////
 The main Sg-FCSS branch
 http://github.com/Glidias/F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concept/tree/master/src/sg/fcss/
 
+///////////////////
 sg.fcss.robotlegs
+///////////////////
 
 The RobotLegs extension branch to support auto-wiring F*CSS properties and SG-Camo's behaviours to textfields/display-objects.
 http://github.com/Glidias/F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concept/tree/master/src/sg/fcss/robotlegs/
