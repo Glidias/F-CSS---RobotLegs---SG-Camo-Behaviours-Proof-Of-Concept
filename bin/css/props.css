@@ -33,12 +33,21 @@ GListDisplay {
    behaviours:WrapHLayoutBehaviour;  
 }
 
+
+
 .ListContainer>WrapHLayoutBehaviour {
 	spacing:20;
 }
 
 .ListContainer#testContainer>WrapHLayoutBehaviour {
 	spacing:5;
+}
+
+.listContainerListItem {
+  // must be declared to allow it to bubble a StyleBubble event up to any parent container
+}
+.ListContainer#testContainer>>.listContainerListItem {
+	alpha:.5;
 }
 
 /* TextField modules under TextSpr base */
@@ -52,6 +61,8 @@ TextSpr>textField {
 .AnotherTextModule { 
 	package:sg.kilo.ui;
 }
+
+
 
 .AnotherTextModule>textField {
 	width:250;

@@ -8,7 +8,7 @@
 	import sg.camo.interfaces.ISelectorSource;
 	import sg.camo.interfaces.ITextField;
 	import sg.fcss.interfaces.IStyleRequester;
-	import sg.fcss.events.StyleRequestBubble;
+	import sg.fcss.events.StyleBubble;
 	import flash.utils.getQualifiedClassName;
 	import flash.utils.getQualifiedSuperclassName;
 
@@ -36,18 +36,22 @@
 		override public function setViewComponent (vc:Object) : void {
 			
 			super.setViewComponent(vc);
+			if (vc == null) return;
+			
 			var txtField:TextField = vc as TextField;
-			if (txtField == null || txtField.embedFonts) return;
+			if (txtField == null) return;
 			
 			var derivedStyle:IStyle;
 			var className:String = getQualifiedClassName(vc).split("::").pop();
 			var arr:Array;
 
 				arr = className != "TextField" ? vc is IReflectClass  ? validateReflectClassStyles(className, txtField) : ["TextField", "."+className, "."+className+"#"+txtField.name] : ["TextField", "TextField#"+txtField.name];
+				
 				derivedStyle = _styleSource.getStyle.apply(null,  arr);
-				txtField.dispatchEvent( new StyleRequestBubble(StyleRequestBubble.TEXT_STYLE, derivedStyle) );
 				
-				
+				if ( !txtField.embedFonts ) txtField.dispatchEvent( new StyleBubble(StyleBubble.TEXT_STYLE, derivedStyle, arr.concat()) );
+				txtField.dispatchEvent( new StyleBubble(StyleBubble.DESCENDANT_STYLE, _styleSource.styleLookup("EmptyStyle"), arr.concat() ) );
+			
 				// consider keeping?
 				mediatorMap.removeMediator(this);  
 			

@@ -8,7 +8,7 @@
 	import org.robotlegs.core.IReflector;
 	import org.robotlegs.mvcs.Command;
 	import org.robotlegs.mvcs.Context;
-	import sg.fcss.events.StyleRequestBubble;
+	import sg.fcss.events.StyleBubble;
 	import sg.fcss.interfaces.IStyleRequester;
 	import sg.fcss.utils.*;
 	import sg.camo.interfaces.IPropertyApplier;
@@ -30,7 +30,6 @@
 			super(contextView, autoStartup);  
 		}
 		
-
 		/**
 		 * Manually called from Gaia's IndexPage through IMainContextProvider under MainCore.
 		 * @see MainCore
@@ -39,28 +38,39 @@
 			if (_inited) return;
 			
 			_inited = true;
+			
+			//  Note: 
+			// You can factor these out to a seperate bootstrap Command class from
+			// which different settings can be injected in. This configuration is merely convention.
+			
+			// Core FCSS
 			injector.mapSingletonOf(IPropertyApplier, StyleApplier );
 			injector.mapSingletonOf(IPropertyApplier, TextStyleApplier, "textStyle");
 			
-			
-			// View Modules to register locally in context to one own custom mediator
-			//mapView("sg.gaialegs.ui::AnotherTextModule", SomeCustomMediatorExtendsBehavioualMediator );
-			
-		
-			// Instantiate default stylings for all unregistered view modules in CSS, and all default Flash textfields
+			// All auto-mapped modules to BehaviourStyleMediator
 			injector.mapValue(Class, BehaviourStyleMediator, "mapModulesTo");
 			injector.mapValue(Dictionary, _mappedModules, "registeredModules");
 			(injector.instantiate(MapModuleStylesCommand) as Command).execute();
+			
+			// All textfields
 			mediatorMap.mapView("flash.text::TextField", TextStyleMediator );
 			
-			
-			injector.mapValue(IEventDispatcher, _contextView, "textStyle");	
-			mediatorMap.registerMediator( _contextView, injector.instantiate(TextStyleApplierMediator) );
+			// Root level listening for textfields and other dispatched style bubbles
+			injector.mapValue(IEventDispatcher, _contextView, "contextStyle");	
+			mediatorMap.registerMediator( _contextView, injector.instantiate(ContextStyleApplierMediator) );
 
 		}
 		
 		/**
-		 * Registers a view module to one's own custom mediator 
+		 * Use this method to register your own mediators in this context.
+		 * It'll register one's own custom mediator to a view class and stores the value in a dictionary
+		 * to prevent it from being auto-mapped again by MapModuleStylesCommand. <br/><br/>
+		 * 
+		 * It is assumed that if you still need the F*CSS behaviour/property application functionality, 
+		 * your custom mediator would still need to extend from the standard BehaviourStyleMediator class.
+		 * 
+		 * @see sg.fcss.robotlegs.MapModuleStylesCommand
+		 * @see sg.fcss.robotlegs.BehaviourStyleMediator
 		 */
 		protected function mapView(viewClassOrName:*, mediatorClass:Class, injectViewAs:Class = null, autoCreate:Boolean = true, autoRemove:Boolean = true):void {
 			_mappedModules[viewClassOrName] = true;

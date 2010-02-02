@@ -13,7 +13,7 @@
 	import sg.camo.interfaces.IPropertyApplier;
 	import sg.camo.interfaces.IReflectClass;
 	import sg.camo.interfaces.ITextField;
-	import sg.fcss.events.StyleRequestBubble;
+	import sg.fcss.events.StyleBubble;
 	import sg.fcss.interfaces.IStyleRequester;
 	import sg.fcss.utils.TextStyleMediatorUtil;
 	import sg.camo.ancestor.AncestorListener;
@@ -23,6 +23,8 @@
 	 * Applies properties and behaviours to view component
 	 * @author Glenn Ko
 	 */
+	
+	[Inject(name="textStyle")]
 	public class BehaviourStyleMediator extends Mediator
 	{
 		
@@ -52,44 +54,76 @@
 		protected var _textPropApplier:IPropertyApplier;
 	
 			
-		[Inject(name="textStyle")]
+
 		public var defaultStylesheet:StyleSheet;
 		
-		
+		protected var _myStyleArray:Array;
 		protected var _behaviourCache:Dictionary;
 		
 		
-		public function BehaviourStyleMediator() 
+		public function BehaviourStyleMediator(defaultStylesheet:StyleSheet=null) 
 		{
 			super();
+			this.defaultStylesheet = defaultStylesheet;
 		}
 		
-		protected function onTextStyleRequest(e:StyleRequestBubble):void { 
+		protected function onTextStyleRequest(e:StyleBubble):void { 
 			e.stopImmediatePropagation();
 		}
 		
 		override public function setViewComponent(vc:Object):void {
 			super.setViewComponent(vc);
+			if (vc == null) return;
+		
+			
+			var vcDispatcher:IEventDispatcher = vc as IEventDispatcher;
+			if (vcDispatcher.hasEventListener(StyleBubble.DESCENDANT_STYLE) ) AncestorListener.removeEventListenerOf(vcDispatcher, StyleBubble.DESCENDANT_STYLE, applyDescendantStyleHandler);
 			
 			var baseReflect:String = vc is IReflectClass ? getQualifiedClassName( (vc as IReflectClass).reflectClass ).split("::").pop() : null;
 			var className:String = getQualifiedClassName(vc).split("::").pop();
 			var superClassName:String = baseReflect!=null ? baseReflect : className;  // getQualifiedSuperclassName(target).split("::").pop();
 			var arr:Array = superClassName != className ? [superClassName, "." + className, "." + className + "#" + vc.name] : ["." + className, "." + className + "#" + vc.name];
 			if (vc is ITextField) {   // consider textField subselector
+				var textPropsArr:Array =  baseReflect != null ? ["TextField", baseReflect + ">textField", "." + className + ">textField"] : ["TextField", "." + className + ">textField"];
+				
 				if ( _styleSource.hasStyle("." + className + ">textField") ) {
-					var textPropsArr:Array =  baseReflect != null ? ["TextField", baseReflect + ">textField", "." + className + ">textField"] : ["TextField", "." + className + ">textField"];
-					var textProps:IStyle = _styleSource.getStyle.apply(null, textPropsArr);
+					var textProps:IStyle = _styleSource.getStyle.apply(null, textPropsArr); 
 					var tProps:Object = textProps;
 					var txtField:TextField = (vc as ITextField).textField;
 					TextStyleMediatorUtil.applyTextStyleWith(_textPropApplier, tProps, txtField, defaultStylesheet);
-					AncestorListener.addEventListenerOf(txtField, StyleRequestBubble.TEXT_STYLE, onTextStyleRequest, 1, false);
+					AncestorListener.addEventListenerOf(txtField, StyleBubble.TEXT_STYLE, onTextStyleRequest, 1, false);
 					if ( tProps.behaviours ) applyBehavioursToVc(txtField, tProps.behaviours, textPropsArr);
 				}
 			}
+			
 			var props:Object =  _styleSource.getStyle.apply(null, arr);
 			if (props.behaviours) applyBehavioursToVc(vc, props.behaviours, arr);
 			
-			_propApplier.applyProperties(vc,props);
+			_propApplier.applyProperties(vc, props);
+			
+			_myStyleArray = arr.concat();
+			var descArray:Array = textPropsArr!=null ? arr.concat( textPropsArr ) : arr.concat();
+			//trace(descArray);
+			vcDispatcher.dispatchEvent( new StyleBubble(StyleBubble.DESCENDANT_STYLE, _styleSource.styleLookup("EmptyStyle"), descArray ) );
+			AncestorListener.addEventListenerOf(vcDispatcher, StyleBubble.DESCENDANT_STYLE, applyDescendantStyleHandler);
+		}
+		
+		protected function applyDescendantStyleHandler(e:StyleBubble):void {
+			var chkArray:Array =  e.styleArray;
+			var u:int = chkArray.length;
+			var curStyle:Object = e.style;
+			while ( --u > -1) {
+				var i:int = _myStyleArray.length;
+				while (--i > -1) {
+					var chkStyle:String = _myStyleArray[i] + ">>" + chkArray[u];
+					if ( _styleSource.hasStyle(chkStyle) ) {  // prepend
+						var chkObj:Object = _styleSource.styleLookup(chkStyle, false);
+						for (var prop:String in chkObj) {
+							if (curStyle[prop] == null) curStyle[prop] = chkObj[prop];
+						}
+					}
+				}
+			}
 		}
 		
 		protected function applyBehavioursToVc(vc:Object, stringToSplit:String, styleArr:Array):void {
@@ -104,11 +138,12 @@
 				
 					applyBehaviourProperties(beh, styleArr);
 
-					if (_behaviourCache) {
-						_behaviourCache[beh.behaviourName] = true;
+					if (behaviouralBase == null) {
+						_behaviourCache[beh.behaviourName] = beh;
 						beh.activate(vc);
 					}
 					else {
+						
 						behaviouralBase.addBehaviour(beh);
 					}
 				}
@@ -133,7 +168,7 @@
 		
 		override public function onRemove():void {
 			if (viewComponent is ITextField) {
-				AncestorListener.removeEventListenerOf(viewComponent as IEventDispatcher, StyleRequestBubble.TEXT_STYLE, onTextStyleRequest);
+				AncestorListener.removeEventListenerOf(viewComponent as IEventDispatcher, StyleBubble.TEXT_STYLE, onTextStyleRequest);
 			}
 		}
 		
