@@ -97,11 +97,10 @@ public class PropertyMapUtil
 
         else
         {
-			// transfered clone to this branch only
-            propMap = cachedPropertyMaps[className].clone();
+            propMap = cachedPropertyMaps[className];
         }
 
-        return propMap;  // as PropertyMapObject   casting removed
+        return propMap.clone();  // as PropertyMapObject   casting removed
     }
 
 
