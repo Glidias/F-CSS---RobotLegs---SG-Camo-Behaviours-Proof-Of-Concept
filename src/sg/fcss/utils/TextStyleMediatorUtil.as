@@ -1,8 +1,8 @@
 ﻿package sg.fcss.utils 
 {
+	import com.flashartofwar.fcss.applicators.IApplicator;
 	import flash.text.StyleSheet;
 	import flash.text.TextField;
-	import sg.camo.interfaces.IPropertyApplier;
 	/**
 	 * Defines the standard conventions for mediating textfields that are already
 	 * on the stage through this shared static utility.
@@ -26,7 +26,7 @@
 		 * @param	defaultStylesheet
 		 * @return	(Boolean) Whether the mediation was successful
 		 */
-		public static function applyTextStyleWith(propApplier:IPropertyApplier, props:Object, txtField:TextField, defaultStylesheet:StyleSheet=null):Boolean {
+		public static function applyTextStyleWith(propApplier:IApplicator, props:Object, txtField:TextField, defaultStylesheet:StyleSheet=null):Boolean {
 				if (txtField.embedFonts) return false; // Don't bother mediating text field styles if textfield already embed
 			
 				if (props.isHtmlText=="true") {   // property flag to indicate using of html text and native Flash stylesheet
@@ -80,7 +80,7 @@
 				}
 				
 				// Apply standard textformat and update textfield
-				propApplier.applyProperties(txtField, props);	
+				propApplier.applyStyle(txtField, props);	
 				txtField.setTextFormat( txtField.defaultTextFormat );
 				return true;
 			}

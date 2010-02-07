@@ -3,7 +3,7 @@
 	import sg.camo.interfaces.IAncestorSprite;
 	import sg.camo.interfaces.IDestroyable;
 	/**
-	 * Utility to automatically force-clean-up all of IAncestorSprite's own display list children.
+	 * Static utility to automatically force-clean-up all of IAncestorSprite's own display list children.
 	 * @author Glenn Ko
 	 */
 	public class AncestorDestructor

@@ -1,7 +1,7 @@
 
 /**
  * <p>Original Author:  jessefreeman</p>
- * <p>Class File: StyleApplierUtil.as</p>
+ * <p>Class File: StyleApplicator.as</p>
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,20 +29,20 @@
  *
  */
 
-package com.flashartofwar.fcss.utils {
-	import com.flashartofwar.fcss.objects.PropertyMapObject;
+package com.flashartofwar.fcss.applicators {
+import com.flashartofwar.fcss.objects.PropertyMapObject;
+import com.flashartofwar.fcss.utils.*;
 
-	import flash.utils.Dictionary;
-	import flash.utils.describeType;
-
-	/**
+/**
 	 * @author jessefreeman
 	 */
-	public class StyleApplierUtil
+	public class StyleApplicator implements IApplicator
 	{
 
-		protected static var cachedPropertyMaps:Dictionary = new Dictionary(true);
-
+        public function StyleApplicator()
+        {
+            
+        }
 
 		/**
 		 * <p>This method will loop through the properties of a Style and attempt
@@ -52,9 +52,9 @@ package com.flashartofwar.fcss.utils {
 		 * @param target
 		 * @param style
 		 */
-		public static function applyProperties(target:Object, styleObject:Object):void
+		public function applyStyle(target:Object, styleObject:Object):void
 		{
-			var propMap:PropertyMapObject = propertyMap(target);
+			var propMap:PropertyMapObject = PropertyMapUtil.propertyMap(target);
 
 			for (var prop:String in styleObject)
 			{
@@ -70,64 +70,6 @@ package com.flashartofwar.fcss.utils {
 			}
 		}
 
-		/**
-		 *
-		 * @param target
-		 * @return
-		 *
-		 */
-		public static function propertyMap(target:Object):PropertyMapObject
-		{
-			var propMap:PropertyMapObject = new PropertyMapObject();
-
-			var classXML:XML = scan(target);
-			var className:String = classXML.@name;
-
-			if (!cachedPropertyMaps[className])
-			{
-				var list:XMLList = classXML..*.((name() == "accessor") || (name() == "variable"));;
-
-				var item:XML;
-				for each (item in list)
-				{
-					var itemName:String = item.name().toString();
-
-					switch (itemName)
-					{
-						case "variable":
-							propMap[item.@name.toString()] = item.@type.toString();
-							break;
-						case "accessor":
-							var access:String = item.@access;
-							if ((access == "readwrite") || (access == "writeonly"))
-							{
-								propMap[item.@name.toString()] = item.@type.toString();
-							}
-							break;
-					}
-					cachedPropertyMaps[className] = propMap;
-				}
-			}
-
-			else
-			{
-				propMap = cachedPropertyMaps[className];
-			}
-
-			return propMap.clone() as PropertyMapObject;
-		}
-
-		/**
-		 *
-		 * @param target
-		 * @return
-		 *
-		 */
-		private static function scan(target:Object):XML
-		{
-			var classXML:XML = describeType(target);
-			return classXML;
-		}
-	}
+    }
 }
 

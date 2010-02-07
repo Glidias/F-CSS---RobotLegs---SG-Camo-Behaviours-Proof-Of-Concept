@@ -1,6 +1,5 @@
 ﻿package sg.camogxml.seo 
 {
-	import com.gaiaframework.debug.GaiaDebug;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
@@ -648,7 +647,6 @@
 			//e.stopPropagation();
 			
 			var disp:DisplayObject = e.currentTarget as DisplayObject;
-			GaiaDebug.log("hrev click:" + String((_anchors[disp] as XML).@href));
 			disp.dispatchEvent ( new TextEvent(TextEvent.LINK, true, false, String((_anchors[disp] as XML).@href) ) );
 		}
 		

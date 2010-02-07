@@ -28,12 +28,12 @@
  *
  */
 
-package com.flashartofwar.fcss.behaviors {
+package com.flashartofwar.fcss.behaviors
+{
+import com.flashartofwar.fcss.applicators.IApplicator;
 import com.flashartofwar.fcss.enum.CSSProperties;
-import com.flashartofwar.fcss.managers.StyleSheetManager;
 import com.flashartofwar.fcss.styles.IStyle;
-import com.flashartofwar.fcss.stylesheets.IStyleSheetCollection;
-import com.flashartofwar.fcss.utils.StyleApplierUtil;
+import com.flashartofwar.fcss.stylesheets.IStyleSheet;
 
 import flash.events.EventDispatcher;
 import flash.utils.Dictionary;
@@ -58,12 +58,13 @@ public class ApplyStyleBehavior extends EventDispatcher implements IApplyStyleBe
 
     private var _defaultStyleNames:Array;
 
-    protected var styleSheetCollection:IStyleSheetCollection = StyleSheetManager.collection;
+    protected var _styleSheet:IStyleSheet;
 
     protected var stateSelectorCache:Array = new Array();
 
     protected var cachedProperties:Dictionary = new Dictionary(true);
 
+    protected var _applicator:IApplicator;
 
     /**
      * <p>The ApplyStyleBehavior encapsulates the logic needed to find an
@@ -83,9 +84,12 @@ public class ApplyStyleBehavior extends EventDispatcher implements IApplyStyleBe
      * @param target Instance that will be used to apply styles onto and
      * also to find it's class name.
      */
-    public function ApplyStyleBehavior(target:Object, styleID:String, styleClass:String = null)
+
+    public function ApplyStyleBehavior(target:Object, applicator:IApplicator, styleSheet:IStyleSheet, styleID:String, styleClass:String = null)
     {
         this.target = target;
+        _applicator = applicator;
+        _styleSheet = styleSheet;
         parseStyleNames(styleID, styleClass);
         applyDefaultStyle();
     }
@@ -104,6 +108,25 @@ public class ApplyStyleBehavior extends EventDispatcher implements IApplyStyleBe
         _defaultStyleNames = value;
     }
 
+    public function get styleSheet():IStyleSheet
+    {
+        return _styleSheet;
+    }
+
+    public function set styleSheet(value:IStyleSheet):void
+    {
+        _styleSheet = value;
+    }
+
+
+    public function get applicator():IApplicator {
+        return _applicator;
+    }
+
+    public function set applicator(value:IApplicator):void {
+        _applicator = value;
+    }
+    
     public function applyDefaultStyle(pseudoSelector:String = null):void
     {
 
@@ -115,30 +138,15 @@ public class ApplyStyleBehavior extends EventDispatcher implements IApplyStyleBe
         }
         else
         {
-            style = styleSheetCollection.getStyle.apply(null, defaultStyleNames);
+            style = _styleSheet.getStyle.apply(null, defaultStyleNames);
         }
 
         if (style.styleName != CSSProperties.DEFAULT_STYLE_NAME)
             applyStyle(style);
-
-        /*var styleNames:Array = defaultStyleNames;
-         if (pseudoSelector != null)
-         {
-         var pseudoSelectorName:String = "#" + id + ":" + pseudoSelector;
-         if (styleSheetCollection.hasStyle(pseudoSelectorName))
-         styleNames[styleNames.length - 1] = "#" + id + ":" + pseudoSelector;
-         }
-
-         var style:IStyle = styleSheetCollection.getStyle.apply(null, styleNames);
-         if (style.styleName != CSSProperties.DEFAULT_STYLE_NAME)
-         applyStyle(style);
-         else
-         trace("Style was empty.");*/
-
     }
 
     /**
-     *    <p>This applies a supplied style to the class. It uses the
+     * <p>This applies a supplied style to the class. It uses the
      * StyleApplierUtil to automatically convert the style's property
      * values to the correct type and apply them.</p>
      *
@@ -150,7 +158,7 @@ public class ApplyStyleBehavior extends EventDispatcher implements IApplyStyleBe
      */
     public function applyStyle(style:IStyle):void
     {
-        StyleApplierUtil.applyProperties(target, style);
+        _applicator.applyStyle(target, style);
     }
 
     /**
@@ -242,13 +250,12 @@ public class ApplyStyleBehavior extends EventDispatcher implements IApplyStyleBe
         }
         else
         {
-            tempStyle = styleSheetCollection.getStyle.apply(null, stateSelectorCache[state]);
+            tempStyle = _styleSheet.getStyle.apply(null, stateSelectorCache[state]);
             cachedProperties[selectorNamesID] = tempStyle;
         }
 
         return tempStyle;
     }
-
 
 }
 }

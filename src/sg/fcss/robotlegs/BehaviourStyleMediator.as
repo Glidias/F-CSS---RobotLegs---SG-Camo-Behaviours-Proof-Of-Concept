@@ -1,5 +1,7 @@
 ﻿package sg.fcss.robotlegs 
 {
+	import camo.core.display.IDisplay;
+	import com.flashartofwar.fcss.applicators.IApplicator;
 	import com.flashartofwar.fcss.styles.IStyle;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
@@ -10,7 +12,6 @@
 	import org.robotlegs.mvcs.Mediator;
 	import sg.camo.interfaces.IBehaviour;
 	import sg.camo.interfaces.IBehaviouralBase;
-	import sg.camo.interfaces.IPropertyApplier;
 	import sg.camo.interfaces.IReflectClass;
 	import sg.camo.interfaces.ITextField;
 	import sg.fcss.events.StyleBubble;
@@ -24,7 +25,7 @@
 	 * @author Glenn Ko
 	 */
 	
-	[Inject(name="textStyle")]
+	[Inject(name='textStyle')]
 	public class BehaviourStyleMediator extends Mediator
 	{
 		
@@ -35,10 +36,10 @@
 		protected var _behaviourSrc:IBehaviouralBase;
 		
 		[Inject]
-		public function set propApplier(src:IPropertyApplier):void {
+		public function set propApplier(src:IApplicator):void {
 			_propApplier = src;
 		}
-		protected var _propApplier:IPropertyApplier;
+		protected var _propApplier:IApplicator;
 		
 
 		[Inject]
@@ -48,20 +49,19 @@
 		protected var _styleSource:IStyleRequester;
 		
 		[Inject(name="textStyle")]
-		public function set textPropApplier(src:IPropertyApplier):void {
+		public function set textPropApplier(src:IApplicator):void {
 			_textPropApplier = src;
 		}
-		protected var _textPropApplier:IPropertyApplier;
+		protected var _textPropApplier:IApplicator;
 	
 			
-
 		public var defaultStylesheet:StyleSheet;
 		
 		protected var _myStyleArray:Array;
 		protected var _behaviourCache:Dictionary;
 		
 		
-		public function BehaviourStyleMediator(defaultStylesheet:StyleSheet=null) 
+		public function BehaviourStyleMediator(defaultStylesheet:StyleSheet= null) 
 		{
 			super();
 			this.defaultStylesheet = defaultStylesheet;
@@ -77,16 +77,16 @@
 		
 			
 			var vcDispatcher:IEventDispatcher = vc as IEventDispatcher;
-			if (vcDispatcher.hasEventListener(StyleBubble.DESCENDANT_STYLE) ) AncestorListener.removeEventListenerOf(vcDispatcher, StyleBubble.DESCENDANT_STYLE, applyDescendantStyleHandler);
+			if (vcDispatcher.hasEventListener(StyleBubble.DESCENDANT_STYLE) ) vcDispatcher.removeEventListener(StyleBubble.DESCENDANT_STYLE, applyDescendantStyleHandler) 
 			
 			var baseReflect:String = vc is IReflectClass ? getQualifiedClassName( (vc as IReflectClass).reflectClass ).split("::").pop() : null;
 			var className:String = getQualifiedClassName(vc).split("::").pop();
 			var superClassName:String = baseReflect!=null ? baseReflect : className;  // getQualifiedSuperclassName(target).split("::").pop();
 			var arr:Array = superClassName != className ? [superClassName, "." + className, "." + className + "#" + vc.name] : ["." + className, "." + className + "#" + vc.name];
-			if (vc is ITextField) {   // consider textField subselector
+			if (vc is ITextField) {   
 				var textPropsArr:Array =  baseReflect != null ? ["TextField", baseReflect + ">textField", "." + className + ">textField"] : ["TextField", "." + className + ">textField"];
-				
-				if ( _styleSource.hasStyle("." + className + ">textField") ) {
+				// Only consider textField subselector if got '.className>textField' declaration
+				if ( _styleSource.hasStyle("." + className + ">textField") ) {  // To also consider all possible sub declarations?
 					var textProps:IStyle = _styleSource.getStyle.apply(null, textPropsArr); 
 					var tProps:Object = textProps;
 					var txtField:TextField = (vc as ITextField).textField;
@@ -95,17 +95,28 @@
 					if ( tProps.behaviours ) applyBehavioursToVc(txtField, tProps.behaviours, textPropsArr);
 				}
 			}
+			if (vc is IDisplay) {  
+				// Only consider display subSelector if got '.className>display' declaration
+				if ( _styleSource.hasStyle("." + className + ">display") ) {  // To also consider all possible sub declarations?
+					var dispPropsArr:Array = baseReflect != null ? [baseReflect + ">display", "." + className + ">display"] : [className + ">display"];
+					var dispProps:Object = _styleSource.getStyle.apply(null, dispPropsArr);
+					
+					if ( dispProps.behaviours ) applyBehavioursToVc((vc as IDisplay).getDisplay(), dispProps.behaviours, dispPropsArr);
+					_propApplier.applyStyle((vc as IDisplay).getDisplay(), dispProps);
+				}
+			}
 			
 			var props:Object =  _styleSource.getStyle.apply(null, arr);
 			if (props.behaviours) applyBehavioursToVc(vc, props.behaviours, arr);
 			
-			_propApplier.applyProperties(vc, props);
+			_propApplier.applyStyle(vc, props);
 			
 			_myStyleArray = arr.concat();
+			if (textPropsArr != null && dispPropsArr != null) textPropsArr = textPropsArr.concat( dispPropsArr);
 			var descArray:Array = textPropsArr!=null ? arr.concat( textPropsArr ) : arr.concat();
 			//trace(descArray);
 			vcDispatcher.dispatchEvent( new StyleBubble(StyleBubble.DESCENDANT_STYLE, _styleSource.styleLookup("EmptyStyle"), descArray ) );
-			AncestorListener.addEventListenerOf(vcDispatcher, StyleBubble.DESCENDANT_STYLE, applyDescendantStyleHandler);
+			vcDispatcher.addEventListener(StyleBubble.DESCENDANT_STYLE, applyDescendantStyleHandler, false, 0, true);
 		}
 		
 		protected function applyDescendantStyleHandler(e:StyleBubble):void {
@@ -149,6 +160,10 @@
 				}
 		}
 		
+		protected function getBehaviour(behName:String):IBehaviour {
+			return _behaviourCache ? _behaviourCache[behName] : viewComponent is IBehaviouralBase ? (viewComponent as IBehaviouralBase).getBehaviour(behName) : null;
+		}
+		
 		protected function applyBehaviourProperties(beh:IBehaviour, styleArr:Array):void {
 			var behName:String = beh.behaviourName;
 					var arrLen:int = styleArr.length;
@@ -163,7 +178,7 @@
 						if (!behStyle) continue;
 						prevStyle.merge(behStyle);
 					}
-					if (prevStyle) _propApplier.applyProperties( beh, prevStyle );
+					if (prevStyle) _propApplier.applyStyle( beh, prevStyle );
 		}
 		
 		override public function onRemove():void {

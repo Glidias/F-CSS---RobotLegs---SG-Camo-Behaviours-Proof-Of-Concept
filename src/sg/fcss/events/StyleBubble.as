@@ -4,10 +4,7 @@
 	import flash.events.Event;
 	
 	/**
-	 * Bubbled event with style information payload.<br/>
-	 * This is a multi-purpose event that can support descendant styles up the display list
-	 * chain, from which eventual stylings can be applied finally on the root context level.
-	 * 
+	 * Bubbled event with style payload and array of strings used to derive the style
 	 * @author Glenn Ko
 	 */
 	public class StyleBubble extends Event 
@@ -18,12 +15,6 @@
 		public var style:IStyle;
 		public var styleArray:Array;
 		
-		/**
-		 * Constructor
-		 * @param	type		The event type
-		 * @param	style		The current IStyle object payload to be applied
-		 * @param	styleArray	An array of style names that was used to derive the style		
-		 */
 		public function StyleBubble(type:String, style:IStyle, styleArray:Array) 
 		{ 
 			super(type, true, false);

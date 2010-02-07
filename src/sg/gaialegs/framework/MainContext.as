@@ -1,5 +1,8 @@
 ﻿package sg.gaialegs.framework 
 {
+	import com.flashartofwar.fcss.applicators.IApplicator;
+	import com.flashartofwar.fcss.applicators.StyleApplicator;
+	import com.flashartofwar.fcss.applicators.TextFieldApplicator;
 	import flash.display.DisplayObjectContainer;
 	import flash.events.IEventDispatcher;
 	import flash.utils.Dictionary;
@@ -11,7 +14,6 @@
 	import sg.fcss.events.StyleBubble;
 	import sg.fcss.interfaces.IStyleRequester;
 	import sg.fcss.utils.*;
-	import sg.camo.interfaces.IPropertyApplier;
 	import sg.fcss.robotlegs.*;
 	
 	
@@ -44,8 +46,9 @@
 			// which different settings can be injected in. This configuration is merely convention.
 			
 			// Core FCSS
-			injector.mapSingletonOf(IPropertyApplier, StyleApplier );
-			injector.mapSingletonOf(IPropertyApplier, TextStyleApplier, "textStyle");
+			injector.mapSingletonOf(IApplicator, StyleApplicator );
+			injector.mapSingletonOf(IApplicator, TextFieldApplicator, "textStyle");
+			
 			
 			// All auto-mapped modules to BehaviourStyleMediator
 			injector.mapValue(Class, BehaviourStyleMediator, "mapModulesTo");

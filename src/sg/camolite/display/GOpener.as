@@ -71,6 +71,7 @@
 		public function set btnOpen(spr:Sprite):void {
 			_btnOpen = spr;
 			spr.buttonMode = true;
+			
 			spr.addEventListener(MouseEvent.CLICK, openBtnClickHandler, false, 0, true);
 		}
 		
