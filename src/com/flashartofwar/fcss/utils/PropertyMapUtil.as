@@ -60,14 +60,15 @@ public class PropertyMapUtil
      */
     public static function propertyMap(target:Object):PropertyMapObject
     {
+	
+         var propMap:PropertyMapObject;		// don't instantiate anything yet
 
-        var propMap:PropertyMapObject = new PropertyMapObject();
-
-		// Ges qualified class name first
+		// Gets qualified class name first
 		var className:String = getQualifiedClassName(target);
 	
         if (!cachedPropertyMaps[className])
         {
+			propMap = new PropertyMapObject();
 			var classXML:XML = describeType(target);  // Only call describe type if necessary
 					
             var list:XMLList = classXML..*.((name() == "accessor") || (name() == "variable"));;
@@ -96,10 +97,11 @@ public class PropertyMapUtil
 
         else
         {
-            propMap = cachedPropertyMaps[className];
+			// transfered clone to this branch only
+            propMap = cachedPropertyMaps[className].clone();
         }
 
-        return propMap.clone();  // as PropertyMapObject   casting needed?
+        return propMap;  // as PropertyMapObject   casting removed
     }
 
 
