@@ -33,6 +33,7 @@ package com.flashartofwar.fcss.utils
 {
 
 import com.flashartofwar.fcss.objects.PropertyMapObject;
+import flash.utils.getQualifiedClassName;
 
 import flash.utils.Dictionary;
 import flash.utils.describeType;
@@ -41,6 +42,16 @@ public class PropertyMapUtil
 {
     protected static var cachedPropertyMaps:Dictionary = new Dictionary(true);
 
+	/**
+	 * Gets property map from the cache if available
+	 * @param	className
+	 * @return	The PropertyMapObject or null if not found
+	 */
+	public static function getPropertyMapCache(className:String):PropertyMapObject {
+		return cachedPropertyMaps[className].clone();
+	}
+		
+		
     /**
      *
      * @param target
@@ -52,11 +63,13 @@ public class PropertyMapUtil
 
         var propMap:PropertyMapObject = new PropertyMapObject();
 
-        var classXML:XML = scan(target);
-        var className:String = classXML.@name;
-
+		// Ges qualified class name first
+		var className:String = getQualifiedClassName(target);
+	
         if (!cachedPropertyMaps[className])
         {
+			var classXML:XML = describeType(target);  // Only call describe type if necessary
+					
             var list:XMLList = classXML..*.((name() == "accessor") || (name() == "variable"));;
 
             var item:XML;
@@ -86,19 +99,9 @@ public class PropertyMapUtil
             propMap = cachedPropertyMaps[className];
         }
 
-        return propMap.clone() as PropertyMapObject;
+        return propMap.clone();  // as PropertyMapObject   casting needed?
     }
 
-    /**
-     *
-     * @param target
-     * @return
-     *
-     */
-    private static function scan(target:Object):XML
-    {
-        var classXML:XML = describeType(target);
-        return classXML;
-    }
+
 }
 }
