@@ -48,7 +48,7 @@ public class PropertyMapUtil
 	 * @return	The PropertyMapObject or null if not found
 	 */
 	public static function getPropertyMapCache(className:String):PropertyMapObject {
-		return cachedPropertyMaps[className].clone();
+		return cachedPropertyMaps[className] ? cachedPropertyMaps[className].clone() : null;
 	}
 		
 		
