@@ -15,6 +15,7 @@
 		
 		public function PropApplierAdaptor(propMapCache:IPropertyMapCache, typeHelper:ITypeHelper) 
 		{
+			if (propMapCache == null) return;
 			super(this, propMapCache, typeHelper);
 		}
 		

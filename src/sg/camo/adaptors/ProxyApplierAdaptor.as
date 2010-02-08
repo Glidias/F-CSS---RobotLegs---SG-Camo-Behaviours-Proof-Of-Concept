@@ -20,7 +20,7 @@
 		 */
 		public function ProxyApplierAdaptor(propApplier:IPropertyApplier, propMapCache:IPropertyMapCache, typeHelper:ITypeHelper) 
 		{
-			super(this, propMapCache, typeHelper);
+			super(self, propMapCache, typeHelper);
 		}
 		
 		

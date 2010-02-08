@@ -21,7 +21,8 @@
 		
 		public function TextPropApplierAdaptor(propMapCache:IPropertyMapCache, typeHelper:ITypeHelper) 
 		{
-			super(propMapCache, typeHelper);
+			if (propMapCache == null) return;
+			super(this, propMapCache, typeHelper);
 		}
 		
 		override public function applyProperties(target:Object, properties:Object):void {

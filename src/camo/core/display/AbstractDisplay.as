@@ -495,7 +495,7 @@ package camo.core.display
 	
 		public function $getChildIndex(child : DisplayObject) : int
 		{
-			return super.getChildIndex( child );
+			return display.getChildIndex( child );
 		}
 
 	
