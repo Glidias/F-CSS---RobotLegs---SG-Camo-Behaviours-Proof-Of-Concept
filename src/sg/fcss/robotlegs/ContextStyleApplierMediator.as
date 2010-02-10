@@ -53,6 +53,7 @@
 		private function onTextStyleRequest(e:StyleBubble):void {
 			e.stopPropagation();
 			TextStyleMediatorUtil.applyTextStyleWith(_textPropApplier, e.style, e.target as TextField, defaultStylesheet);
+			_propApplier.applyStyle(e.target, e.style);
 		}
 		
 		private function applyDescendantStyleHandler(e:StyleBubble):void {

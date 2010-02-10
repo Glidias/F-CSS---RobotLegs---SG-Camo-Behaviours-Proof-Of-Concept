@@ -2,7 +2,7 @@
 <site title="The Kilo Test: %PAGE%" menu="true"  indexFirst="true">
     <page id="index" src="index.swf" title="The Kilo FCSS Test" domain="current" seo="true" >
 	   <!-- Gaia/CGG/RobotLegs startup -->
-	   <asset id="maincore" src="maincore.swf"></asset>
+	   <asset id="maincore" src="maincore.swf" domain="current"></asset>
 	   <asset id="cgg_config" src="xml/cgg_config.xml"></asset>
 	   
 	   <!-- TODO: Core dependencies that should be able to run standalone WITHOUT Gaia -->

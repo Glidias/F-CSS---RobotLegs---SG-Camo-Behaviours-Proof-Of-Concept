@@ -11,6 +11,11 @@
 	import org.robotlegs.core.IReflector;
 	import org.robotlegs.mvcs.Command;
 	import org.robotlegs.mvcs.Context;
+	import sg.camo.greensock.GSGlobals;
+	import sg.camo.interfaces.IPropertyMapCache;
+	import sg.camo.interfaces.ITypeHelper;
+	import sg.fcss.adaptors.PropertyMapCacheAdaptor;
+	import sg.fcss.adaptors.TypeHelperUtilProxyFCSS;
 	import sg.fcss.events.StyleBubble;
 	import sg.fcss.interfaces.IStyleRequester;
 	import sg.fcss.utils.*;
@@ -44,6 +49,12 @@
 			//  Note: 
 			// You can factor these out to a seperate bootstrap Command class from
 			// which different settings can be injected in. This configuration is merely convention.
+			
+		
+			injector.mapSingletonOf(IPropertyMapCache, PropertyMapCacheAdaptor);
+			injector.mapSingletonOf(ITypeHelper, TypeHelperUtilProxyFCSS);
+			//GSGlobals 
+			injector.instantiate(GSGlobals); // (required if using Greensock tweening and behaviours under sg.camo.greensock)
 			
 			// Core FCSS
 			injector.mapSingletonOf(IApplicator, StyleApplicator );

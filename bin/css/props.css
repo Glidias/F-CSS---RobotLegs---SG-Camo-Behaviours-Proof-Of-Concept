@@ -8,6 +8,7 @@ TextField#coolField {
 	font-size:15;
 	isHtmlText:true;
 	selectable:true;
+
 }
 
 TextField#testField {
@@ -30,21 +31,43 @@ GListDisplay {
 
 }
 .ListContainer {
-   behaviours:WrapHLayoutBehaviour;  
+   behaviours:WrapHLayoutBehaviour sg.camo.greensock.behaviour.GSListTransitionBehaviour;  
+}
+
+.ListContainer>GSListTransitionBehaviour {
+   forEachDuration:.5;
+   forEachFromVars:alpha:0,*y:-8;
+   stagger:-.4;
+  
+   eventIn:enterFrame;
+   oneShot:true;
 }
 
 
 
 .ListContainer>WrapHLayoutBehaviour {
 	spacing:20;
+	listenDraw:true;
 }
 
 .ListContainer#testContainer>WrapHLayoutBehaviour {
 	spacing:5;
+	listenDraw:true;
 }
 
 .listContainerListItem {
+	behaviours:sg.camo.greensock.behaviour.TweenEventBehaviour;
+	buttonMode:true;
+	
   // must be declared to allow it to bubble a StyleBubble event up to any parent container
+}
+
+.listContainerListItem>TweenEventBehaviour {
+   fromVars:*width:0;
+   toVars:width:100;
+   eventTo:rollOver;
+   eventReturn:rollOut;
+   dispatchDraw:true;
 }
 .ListContainer#testContainer>>.listContainerListItem {
 	alpha:.5;

@@ -49,13 +49,12 @@
 			myBaseTransition = val;
 		}
 		
-		
+
 		protected function transitionInHandler(e:Event):void {
 			
 			var twc:TweenCore = myBaseTransition.transitionInPayload;
 
 			twc.vars.onComplete = dispatchInComplete;
-			
 			
 			twc.restart(true, false);
 			
