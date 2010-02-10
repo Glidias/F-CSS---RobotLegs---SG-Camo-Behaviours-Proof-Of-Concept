@@ -5,28 +5,28 @@
 	import com.flashartofwar.fcss.applicators.IApplicator;
 	
 	/**
-	 * IApplicator proxy to share interface signatures between SG-Camo and F*CSS,
+	 * IPropertyApplier proxy to share interface signatures between SG-Camo and F*CSS,
 	 * implementing both IApplicator and IPropertyApplier signatures to allow cross-platform
 	 * usage between the two frameworks.
 	 * 
 	 * @author Glenn Ko
 	 */
 	
-	public class ApplicatorProxy implements IPropertyApplier, IApplicator
+	public class PropertyApplierProxy implements IPropertyApplier, IApplicator
 	{
-		private var _applicator:IApplicator;
+		private var _propApplier:IPropertyApplier;
 		
-		public function ApplicatorProxy(applicator:IApplicator) 
+		public function ApplicatorProxy(propApplier:IPropertyApplier) 
 		{
-			_applicator = applicator;
+			_propApplier = propApplier;
 		}
 		
 		public function applyStyle(target:Object, style:Object):void {
-			_applicator.applyStyle(target, style);
+			_propApplier.applyProperties(target, style);
 		}
 		
 		public function applyProperties(target:Object, properties:Object):void {
-			_applicator.applyStyle(target, properties);
+			_propApplier.applyProperties(target, properties);
 		}
 		
 		
