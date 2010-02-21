@@ -9,16 +9,8 @@
 	   <asset id="fonts" src="fonts.swf"></asset>
 	   <asset id="props" src="css/props.css" type="text"></asset>
 	   <asset id="stylesheet" src="css/stylesheet.css"></asset>
-	   <asset id="behaviours" src="behaviours.swf" type="behaviours"></asset>
-	   <asset id="gsTransitions" src="gsTransitions.swf" type="definitions" domain="current" classified="true">
-		    <classes>
-				<gs class="sg.camogxml.managers.gs.GSTransition" />
-				<gsList class="sg.camogxml.managers.gs.GSListTransition" />
-			</classes>
-			<methods>
-				<Cubic class="com.greensock.easing.Cubic"></Cubic>
-			</methods>
-	   </asset>
+	   <asset id="behaviours" src="behaviours.swf" type="behaviours" domain="current"></asset>
+
 	 
 		<page id="section1" src="section.swf" title="SectionTest" menu="true">
 			

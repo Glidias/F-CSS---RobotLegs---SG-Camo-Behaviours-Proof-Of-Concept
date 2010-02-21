@@ -26,7 +26,10 @@
 		}
 		protected var _styleSource:IStyleRequester;	
 	
-		
+		/**
+		 * An array reference of style names being used for object
+		 */
+		protected var _myStyleArray:Array;
 		
 		public function TextStyleMediator() 
 		{
@@ -39,21 +42,23 @@
 			if (vc == null) return;
 			
 			var txtField:TextField = vc as TextField;
-			if (txtField == null) return;
+			if (txtField == null) {
+				_myStyleArray = [];
+				return;
+			}
 			
 			var derivedStyle:IStyle;
 			var className:String = getQualifiedClassName(vc).split("::").pop();
 			var arr:Array;
 
-				arr = className != "TextField" ? vc is IReflectClass  ? validateReflectClassStyles(className, txtField) : ["TextField", "."+className, "."+className+"#"+txtField.name] : ["TextField", "TextField#"+txtField.name];
+			arr = className != "TextField" ? vc is IReflectClass  ? validateReflectClassStyles(className, txtField) : ["TextField", "."+className, "."+className+"#"+txtField.name] : ["TextField", "TextField#"+txtField.name];
 				
-				derivedStyle = _styleSource.getStyle.apply(null,  arr);
+			derivedStyle = _styleSource.getStyle.apply(null,  arr);
 				
-				if ( !txtField.embedFonts ) txtField.dispatchEvent( new StyleBubble(StyleBubble.TEXT_STYLE, derivedStyle, arr.concat()) );
-				txtField.dispatchEvent( new StyleBubble(StyleBubble.DESCENDANT_STYLE, _styleSource.styleLookup("EmptyStyle"), arr.concat() ) );
+			if ( !txtField.embedFonts ) txtField.dispatchEvent( new StyleBubble(StyleBubble.TEXT_STYLE, derivedStyle, arr.concat()) );
+			txtField.dispatchEvent( new StyleBubble(StyleBubble.DESCENDANT_STYLE, _styleSource.styleLookup("EmptyStyle"), arr.concat() ) );
 			
-				// consider keeping?
-				mediatorMap.removeMediator(this);  
+			_myStyleArray = arr;
 			
 		}
 		

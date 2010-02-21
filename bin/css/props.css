@@ -16,9 +16,31 @@ TextField#testField {
 	height:120;
 }
 
+.MovieClipText {  
+	
+}
+
+.MovieClipText>textField#named {
+  text:This is a named MovieClip Text;
+	font-size:25;
+}
+
+.NestedContainer {}
+
+.NestedContainer>>.MovieClipText>textField {
+	text:This is nested container MovieClipText unnamed;
+}
+
+.NestedContainer>>.MovieClipText>textField#named {
+	text:This is nested container named MovieClip Text;
+
+}
+
+
+
 
 .MovieClipText>textField {
-	font-size:66;
+	font-size:21;
 	font:HiltonFontRegular;
 	height:100;	
 	selectable:true;
@@ -72,6 +94,8 @@ GListDisplay {
 .ListContainer#testContainer>>.listContainerListItem {
 	alpha:.5;
 }
+
+
 
 /* TextField modules under TextSpr base */
 TextSpr {
