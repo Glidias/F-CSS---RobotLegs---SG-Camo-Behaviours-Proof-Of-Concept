@@ -18,6 +18,8 @@ http://fcss.flashartofwar.com/
 http://github.com/Glidias/SG-Camo-Collections
 http://www.gaiaflashframework.com
 
+Case studies:
+http://wiki.github.com/Glidias/F-CSS---RobotLegs---SG-Camo-Behaviours-Proof-Of-Concept/case-studies-example-sites
 
 Here's the links to the important parts of the site's src code:
 
